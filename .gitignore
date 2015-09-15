@@ -30,3 +30,16 @@ proguard/
 *.jar
 *.war
 *.ear
+
+app/app.iml
+
+.idea/
+lonelyTwitter.iml
+
+app/app.iml
+
+.idea/runConfigurations.xml
+
+app/app.iml
+
+gradle/wrapper/gradle-wrapper.properties
