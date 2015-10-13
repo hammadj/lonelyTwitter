@@ -13,8 +13,10 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,9 +28,30 @@ import com.google.gson.reflect.TypeToken;
 public class LonelyTwitterActivity extends Activity {
 
 	private static final String FILENAME = "file.sav"; //controller
+	private LonelyTwitterActivity activity = this;
+
 	private EditText bodyText; //view
+
+	public EditText getBodyText() {
+		return bodyText;
+	}
+
+	private Button saveButton;
+	public Button getSaveButton() {
+		return saveButton;
+	}
+
 	private ListView oldTweetsList; //view
+	public ListView getOldTweetsList() {
+		return oldTweetsList;
+	}
+
+
+
 	private ArrayList<Tweet> tweets = new ArrayList<Tweet>(); //model
+	public ArrayList<Tweet> getTweets() {
+		return tweets;
+	}
 	private ArrayAdapter<Tweet> adapter; //view
 
 	/** Called when the activity is first created. */
@@ -39,7 +62,7 @@ public class LonelyTwitterActivity extends Activity {
 		setContentView(R.layout.main); //view
 
 		bodyText = (EditText) findViewById(R.id.body); //view
-		Button saveButton = (Button) findViewById(R.id.save); //view
+		saveButton = (Button) findViewById(R.id.save); //view
 		oldTweetsList = (ListView) findViewById(R.id.oldTweetsList); //view
 
 		saveButton.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +73,14 @@ public class LonelyTwitterActivity extends Activity {
 				tweets.add(new NormalTweet(text)); //controller
 				adapter.notifyDataSetChanged(); //view
 				saveInFile(); //controller
+			}
+		});
+		oldTweetsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(activity, EditTweetActivity.class);
+				intent.putExtra("tweetpos", position);
+				startActivity(intent);
 			}
 		});
 	}
@@ -93,4 +124,7 @@ public class LonelyTwitterActivity extends Activity {
 			throw new RuntimeException(e);
 		}
 	}
+
+
+
 }
