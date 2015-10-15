@@ -71,7 +71,7 @@ public class LonelyTwitterActivityTest extends ActivityInstrumentationTestCase2 
 
 
         // Validate that EditTweetActivity is started
-        EditTweetActivity receiverActivity = (EditTweetActivity)
+        final EditTweetActivity receiverActivity = (EditTweetActivity)
                 receiverActivityMonitor.waitForActivityWithTimeout(1000);
         assertNotNull("EditTweetActivity is null", receiverActivity);
         assertEquals("Monitor for EditTweetActivity has not been called",
@@ -84,19 +84,45 @@ public class LonelyTwitterActivityTest extends ActivityInstrumentationTestCase2 
 
         //test that tweet being shown on the edit screen is the tweet we clicked on
         Tweet editTweet = receiverActivity.getTweet();
-        assertEquals("Tweet shown on edit screen is not same as tweet clicked", tweet, editTweet);
+        assertEquals("Tweet shown on edit screen is not same as tweet clicked", tweet.getText(), editTweet.getText());
 
 
         //edit the text of that tweet
+        receiverActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                bodyText = receiverActivity.getEditTweetText();
+                bodyText.setText("cheeseburgers");
+            }
+        });
+        getInstrumentation().waitForIdleSync(); //make sure threads finish
+
 
         // save our edits
+        saveButton = receiverActivity.getSaveButton();
+        receiverActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                saveButton.performClick();
+            }
+        });
+        getInstrumentation().waitForIdleSync(); //make sure threads finish
 
         //assert that out edits were saved into the tweet correctly
+        editTweet = receiverActivity.getTweet();
+        assertEquals("Edits were not saved into tweet correctly", editTweet.getText(), "cheeseburgers");
+
 
         //assert that our edits are shown on the screen to the user
+        receiverActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                bodyText = receiverActivity.getEditTweetText();
+            }
+        });
+        getInstrumentation().waitForIdleSync(); //make sure threads finish
+
+        assertEquals("Edits were not shown on the screen to the user", bodyText.getText().toString(), "cheeseburgers");
+
         // back in the main activity
-
-
+        assertEquals("Not back in main activity", activity, getActivity());
 
         //end test - clear data
         receiverActivity.finish();

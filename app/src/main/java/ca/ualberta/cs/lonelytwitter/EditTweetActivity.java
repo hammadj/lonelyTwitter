@@ -1,26 +1,50 @@
 package ca.ualberta.cs.lonelytwitter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+
 
 public class EditTweetActivity extends Activity {
 
     private Tweet tweet;
-
     public Tweet getTweet() {
         return tweet;
+    }
+
+    private EditText editTweetText;
+    public EditText getEditTweetText() {
+        return editTweetText;
+    }
+
+    private Button saveButton;
+    public Button getSaveButton() {
+        return saveButton;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_tweet);
+        editTweetText = (EditText) findViewById(R.id.editTweetText); //view
+        saveButton = (Button) findViewById(R.id.editTweetSave); //view
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                String text = editTweetText.getText().toString(); //controller
+                tweet.setText(text); //controller
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("editedTweet",tweet);
+                setResult(RESULT_OK,returnIntent);
+                finish();
+            }
+        });
 
     }
 
@@ -28,10 +52,9 @@ public class EditTweetActivity extends Activity {
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-        LonelyTwitterActivity activity = (LonelyTwitterActivity) getParent();
-        final ListView oldTweetsList = activity.getOldTweetsList();
-        tweet = (Tweet) oldTweetsList.getItemAtPosition(getIntent().getExtras().getInt("tweetpos"));
-        ListAdapter adapter = oldTweetsList.getAdapter(); //view
+
+        tweet = (Tweet) getIntent().getSerializableExtra("tweet");
+        editTweetText.setText(tweet.getText());
     }
 
     @Override

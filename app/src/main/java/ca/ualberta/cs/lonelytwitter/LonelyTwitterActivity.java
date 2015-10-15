@@ -79,8 +79,8 @@ public class LonelyTwitterActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(activity, EditTweetActivity.class);
-				intent.putExtra("tweetpos", position);
-				startActivity(intent);
+				intent.putExtra("tweet", (Tweet) oldTweetsList.getItemAtPosition(position));
+				startActivityForResult(intent, 1);
 			}
 		});
 	}
@@ -124,7 +124,6 @@ public class LonelyTwitterActivity extends Activity {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 
 }

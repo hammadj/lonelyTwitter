@@ -1,13 +1,14 @@
 package ca.ualberta.cs.lonelytwitter;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by joshua2 on 9/16/15.
  */
-public abstract class Tweet extends Object implements Tweetable, MyObservable {
+public abstract class Tweet extends Object implements Tweetable, MyObservable, Serializable {
     private String text; //model
     protected Date date; //model
 
